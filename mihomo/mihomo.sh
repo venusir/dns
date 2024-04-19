@@ -37,6 +37,9 @@ echo "复制完成"
 #git clone https://github.com/metacubex/metacubexd.git -b gh-pages /etc/mihomo/ui
 #echo "ui界面安装完成"
 
+# echo "更新UI"
+# git -C /etc/mihomo/ui pull -r
+
 echo "开始安装ui界面"
 # 下载yacd面板
 wget https://github.com/haishanh/yacd/releases/download/v0.3.8/yacd.tar.xz
@@ -44,14 +47,12 @@ wget https://github.com/haishanh/yacd/releases/download/v0.3.8/yacd.tar.xz
 # 解压并移动到指定目录
 tar -xf yacd.tar.xz
 mv public /etc/mihomo/yacd
-
-# echo "更新UI"
-# git -C /etc/mihomo/ui pull -r
 echo "ui界面安装完成"
 
 echo "开始设置 转发"
 echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
 echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.conf
+sysctl -p
 echo "转发设置完成"
 
 echo "开始创建 systemd 服务"
@@ -70,7 +71,7 @@ AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME 
 Restart=always
 ExecStartPre=/usr/bin/sleep 1s
 ExecStart=/usr/local/bin/mihomo -d /etc/mihomo
-ExecReload=/bin/kill -HUP $MAINPID
+ExecReload=/bin/kill -HUP \$MAINPID
 
 [Install]
 WantedBy=multi-user.target

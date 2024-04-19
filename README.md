@@ -19,8 +19,9 @@ lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
 
 上面的 `10:200` 需要和前面使用 `ls -al /dev/net/tun` 获取的结果对应起来.
 
+### 开启IP转发
 
-**然后** 是开启 lxc 的 IP 转发功能
+开启 lxc 的 IP 转发功能
 
 编辑 `/etc/sysctl.conf` 文件, 将以下两行的注释去掉. 如果没有这两行, 需要添加
 
@@ -42,3 +43,13 @@ sysctl -p /etc/sysctl.conf
 [ROS搭配Clash，彻底抛弃openwrt，配合无污染DNS进行IP分流](https://www.youtube.com/watch?v=eOr8yrp4KWk&t=777s)
 
 [RBC第二期，ROS搭配Clash meta建立透明网关，进行IP分流](https://www.youtube.com/watch?v=Tnl75GunY9w)
+
+### 一键安装
+
+```
+wget https://raw.githubusercontent.com/venusir/dns/main/mihomo/mihomo.sh | sh
+```
+
+```
+wget https://raw.githubusercontent.com/venusir/dns/main/mosdns/dns.sh | sh
+```

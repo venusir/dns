@@ -6,7 +6,7 @@ apt-get update
 #apt-get install git -y
 
 echo "开始创建 /etc/mihomo 目录"
-sudo mkdir -p /etc/mihomo
+mkdir -p /etc/mihomo
 echo "/etc/mihomo 目录创建完成"
 
 echo "开始下载 mihomo 配置文件"

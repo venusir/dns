@@ -31,14 +31,14 @@ proxy-groups:
   - name: "auto"
     type: url-test
     proxies:
-      - Hostdare:192.200.160.22
+      - aaa
     url: "https://cp.cloudflare.com/generate_204"
     interval: 300
 
   - name: proxy
     type: select
     proxies:
-      - Hostdare:192.200.160.22
+      - aaa
 
 rules:
   - MATCH,proxy

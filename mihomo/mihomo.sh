@@ -3,7 +3,7 @@
 # PVE LXC 需要开启CT的TUN
 
 apt-get update
-apt-get install git -y
+#apt-get install git -y
 
 echo "开始创建 /etc/mihomo 目录"
 sudo mkdir -p /etc/mihomo

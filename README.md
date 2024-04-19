@@ -47,9 +47,9 @@ sysctl -p /etc/sysctl.conf
 ### 一键安装
 
 ```
-wget https://raw.githubusercontent.com/venusir/dns/main/mihomo/mihomo.sh | sh
+bash <(curl -sSL https://raw.githubusercontent.com/venusir/dns/main/mihomo/mihomo.sh)
 ```
 
 ```
-wget https://raw.githubusercontent.com/venusir/dns/main/mosdns/dns.sh | sh
+bash <(curl -sSL https://raw.githubusercontent.com/venusir/dns/main/mosdns/dns.sh)
 ```

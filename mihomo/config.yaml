@@ -1,0 +1,44 @@
+mixed-port: 7890
+allow-lan: true
+bind-address: '*'
+mode: rule
+log-level: info
+external-controller: '0.0.0.0:80'
+external-ui: /etc/mihomo/yacd
+tun:
+    enable: true
+    stack: system
+    auto-route: true
+    auto-detect-interface: true
+proxies:
+  - name: "name"
+    type: vmess
+    server: 0.0.0.0
+    port: 443
+    uuid: 3b9875cc-306d-47a6-e81a-195eabcbfc35
+    alterId: 0
+    cipher: auto
+    udp: true
+    tls: true
+    servername: example.com
+    network: ws
+    ws-opts:
+      path: /path
+      headers:
+        Host: example.com
+
+proxy-groups:
+  - name: "auto"
+    type: url-test
+    proxies:
+      - Hostdare:192.200.160.22
+    url: "https://cp.cloudflare.com/generate_204"
+    interval: 300
+
+  - name: proxy
+    type: select
+    proxies:
+      - Hostdare:192.200.160.22
+
+rules:
+  - MATCH,proxy

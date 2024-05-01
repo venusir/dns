@@ -3,42 +3,93 @@ allow-lan: true
 bind-address: '*'
 mode: rule
 log-level: info
-external-controller: '0.0.0.0:80'
+external-controller: 0.0.0.0:9093
 external-ui: /etc/mihomo/yacd
+external-ui-name: yacd
+secret: "123456"
+
 tun:
     enable: true
     stack: system
     auto-route: true
     auto-detect-interface: true
-proxies:
-  - name: "name"
-    type: vmess
-    server: 0.0.0.0
-    port: 443
-    uuid: 3b9875cc-306d-47a6-e81a-195eabcbfc35
-    alterId: 0
-    cipher: auto
-    udp: true
-    tls: true
-    servername: example.com
-    network: ws
-    ws-opts:
-      path: /path
-      headers:
-        Host: example.com
+    
+proxy-providers:
+  BGW:
+   type: http
+   path: ./provider/bgw.yaml
+   url: "https://www.example.com"
+   interval: 86400
+   proxy: DIRECT
+   header:
+     User-Agent:
+     - "Clash/v1.18.0"
+     - "mihomo/1.18.3"
+   health-check:
+     enable: true
+     url: http://www.gstatic.com/generate_204
+     interval: 300
+     
+  VULTR:
+   type: http
+   path: ./provider/vultr.yaml
+   url: "https://www.example.com"
+   interval: 86400
+   proxy: DIRECT
+   header:
+     User-Agent:
+     - "Clash/v1.18.0"
+     - "mihomo/1.18.3"
+   health-check:
+     enable: true
+     url: http://www.gstatic.com/generate_204
+     interval: 300
+     
+  PROXY-VULTR:
+   type: http
+   path: ./provider/cf.yaml
+   url: "https://www.example.com"
+   interval: 86400
+   proxy: DIRECT
+   header:
+     User-Agent:
+     - "Clash/v1.18.0"
+     - "mihomo/1.18.3"
+   health-check:
+     enable: true
+     url: http://www.gstatic.com/generate_204
+     interval: 300
+
 
 proxy-groups:
-  - name: "auto"
+  - name: "NETFLIX"
     type: url-test
-    proxies:
-      - aaa
     url: "https://cp.cloudflare.com/generate_204"
     interval: 300
+    use:
+      - VULTR
+      
+  - name: "SELECTOR-AUTO"
+    type: url-test
+    url: "https://cp.cloudflare.com/generate_204"
+    interval: 300
+    use:
+      - BGW
+      - VULTR
+      
+  - name: "SELECTOR-MANUAL"
+    type: select
+    use:
+      - PROXY-VULTR
 
-  - name: proxy
+  - name: "PROXY"
     type: select
     proxies:
-      - aaa
+      - DIRECT
+      - SELECTOR-AUTO
+      - SELECTOR-MANUAL
 
 rules:
-  - MATCH,proxy
+  - GEOIP,LAN,DIRECT
+  - GEOIP,NETFLIX,NETFLIX
+  - MATCH,PROXY

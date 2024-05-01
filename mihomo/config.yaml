@@ -13,6 +13,8 @@ tun:
     stack: system
     auto-route: true
     auto-detect-interface: true
+    dns-hijack:
+      - 192.168.98.1:53 # 搭配mosdns时需要关闭DNS劫持
     
 proxy-providers:
   BGW:

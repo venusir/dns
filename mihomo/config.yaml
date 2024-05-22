@@ -3,9 +3,9 @@ allow-lan: true
 bind-address: '*'
 mode: rule
 log-level: info
-external-controller: 0.0.0.0:9093
-external-ui: /etc/mihomo/yacd
-external-ui-name: yacd
+external-controller: 0.0.0.0:9090
+external-ui: /etc/mihomo/ui
+#external-ui-name: yacd
 secret: "123456"
 
 tun:
@@ -20,76 +20,47 @@ proxy-providers:
   BGW:
    type: http
    path: ./provider/bgw.yaml
-   url: "https://www.example.com"
-   interval: 86400
+   url: "https://example.com"
+   interval: 28800
    proxy: DIRECT
-   header:
-     User-Agent:
-     - "Clash/v1.18.0"
-     - "mihomo/1.18.3"
    health-check:
      enable: true
      url: http://www.gstatic.com/generate_204
      interval: 300
-     
   VULTR:
    type: http
    path: ./provider/vultr.yaml
-   url: "https://www.example.com"
-   interval: 86400
+   url: "https://example.com"
+   interval: 28800
    proxy: DIRECT
-   header:
-     User-Agent:
-     - "Clash/v1.18.0"
-     - "mihomo/1.18.3"
    health-check:
      enable: true
      url: http://www.gstatic.com/generate_204
      interval: 300
      
-  PROXY-VULTR:
-   type: http
-   path: ./provider/cf.yaml
-   url: "https://www.example.com"
-   interval: 86400
-   proxy: DIRECT
-   header:
-     User-Agent:
-     - "Clash/v1.18.0"
-     - "mihomo/1.18.3"
-   health-check:
-     enable: true
-     url: http://www.gstatic.com/generate_204
-     interval: 300
-
-
 proxy-groups:
   - name: "NETFLIX"
-    type: url-test
+    type: load-balance
     url: "https://cp.cloudflare.com/generate_204"
     interval: 300
     use:
-      - VULTR
-      
-  - name: "SELECTOR-AUTO"
-    type: url-test
+      - VULTR  
+  - name: "URLTEST"
+    type: load-balance
     url: "https://cp.cloudflare.com/generate_204"
     interval: 300
     use:
       - BGW
-      - VULTR
-      
-  - name: "SELECTOR-MANUAL"
+  - name: "SELECT"
     type: select
     use:
-      - PROXY-VULTR
-
+      - BGW
   - name: "PROXY"
     type: select
     proxies:
       - DIRECT
-      - SELECTOR-AUTO
-      - SELECTOR-MANUAL
+      - URLTEST
+      - SELECT
 
 rules:
   - GEOIP,LAN,DIRECT
